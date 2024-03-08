@@ -8,6 +8,5 @@ import androidx.navigation.NavController
 fun ProductsScreen(
     navController: NavController,
 ) {
-
     Text("ProductsScreen")
 }
