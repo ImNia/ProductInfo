@@ -1,4 +1,9 @@
 <resources>
     <string name="app_name">ProductInfo</string>
     <string name="products_title">Продукты</string>
+    <string name="error_title">Oшибка</string>
+    <string name="error_server">Ошибка сервера</string>
+    <string name="error_not_connect">Проверьте подключение к интернету</string>
+    <string name="error_unknown">Что-то пошло не так</string>
+    <string name="error_button">Обновить</string>
 </resources>

@@ -1,33 +1,25 @@
 package com.example.productinfo.presentation.ui.products
 
+import android.util.Log
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
-import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import coil.compose.AsyncImage
 import com.example.productinfo.R
-import com.example.productinfo.domain.models.Product
+import com.example.productinfo.domain.models.ErrorType
 import com.example.productinfo.ui.theme.Typography
 
 @Composable
@@ -51,72 +43,54 @@ fun ProductsScreen(
             )
         }
     ) { innerPadding ->
-        LazyVerticalStaggeredGrid(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(colorResource(id = R.color.background))
-                .padding(innerPadding),
-            columns = StaggeredGridCells.Fixed(2),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalItemSpacing = 16.dp
-        ) {
-            items(state.value.products.size) { index ->
-                if (index >= state.value.products.size - 1 && !state.value.isLoading) {
-                    viewModel.onEvent(ProductsEvent.OnLoading)
+        if (state.value.error != null) {
+            AlertDialog(
+                title = {
+                    Text(
+                        text = stringResource(id = R.string.error_title),
+                        style = Typography.bodyMedium
+                    )
+                },
+                text = {
+                    Text(
+                        text = when (state.value.error!!) {
+                            ErrorType.NOT_CONNECT -> {
+                                stringResource(id = R.string.error_not_connect)
+                            }
+
+                            ErrorType.SERVER_ERROR -> {
+                                stringResource(id = R.string.error_server)
+                            }
+
+                            ErrorType.UNKNOWN -> {
+                                stringResource(id = R.string.error_unknown)
+                            }
+                        },
+                        style = Typography.bodyMedium
+                    )
+                },
+                onDismissRequest = {
+                    viewModel.onEvent(ProductsEvent.OnHideAlert)
+                },
+                confirmButton = {
+                    Button(
+                        onClick = {
+                            viewModel.onEvent(ProductsEvent.OnLoading)
+                        }
+                    ) {
+                        Text(
+                            text = stringResource(id = R.string.error_button),
+                            style = Typography.bodyMedium
+                        )
+                    }
                 }
-                ProductItem(
-                    product = state.value.products[index]
-                )
-            }
-        }
-        if (state.value.isLoading) {
-            CircularProgressIndicator(
-                modifier = Modifier.padding(vertical = 16.dp)
             )
         }
-    }
-}
-
-@Composable
-fun ProductItem(
-    product: Product,
-) {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 8.dp)
-            .clip(RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp))
-            .background(colorResource(id = R.color.white))
-            .padding(bottom = 8.dp),
-        verticalArrangement = Arrangement.SpaceBetween
-    ) {
-        AsyncImage(
-            modifier = Modifier
-                .fillMaxWidth()
-                .clip(RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp)),
-            model = product.thumbnail,
-            contentDescription = null,
-            contentScale = ContentScale.Inside
-        )
-
-        Text(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 8.dp),
-            text = product.title,
-            maxLines = 2,
-            textAlign = TextAlign.Start,
-            style = Typography.bodyMedium
-        )
-        Spacer(modifier = Modifier.height(8.dp))
-        Text(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 8.dp),
-            text = product.description,
-            maxLines = 4,
-            textAlign = TextAlign.Justify,
-            style = Typography.bodySmall
+        ProductsScreenContent(
+            innerPadding = innerPadding,
+            products = state.value.products,
+            onEvent = viewModel::onEvent,
+            isLoading = state.value.isLoading
         )
     }
 }

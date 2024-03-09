@@ -1,5 +1,6 @@
 package com.example.productinfo.domain.usecases
 
+import com.example.productinfo.domain.models.ErrorType
 import com.example.productinfo.domain.models.Products
 import com.example.productinfo.domain.models.RequestParam
 import com.example.productinfo.domain.repository.ProductsRepository
@@ -14,7 +15,7 @@ class ProductsUseCase @Inject constructor(
 
         return when(response.code) {
             -1 -> {
-                Resource.Error("Проверьте подключение к интернету")
+                Resource.Error(ErrorType.NOT_CONNECT)
             }
             200 -> {
                 with(response as Products) {
@@ -22,7 +23,7 @@ class ProductsUseCase @Inject constructor(
                 }
             }
             else -> {
-                Resource.Error("Ошибка сервера")
+                Resource.Error(ErrorType.SERVER_ERROR)
             }
         }
     }

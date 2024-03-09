@@ -1,10 +1,11 @@
 package com.example.productinfo.presentation.ui.products
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.productinfo.domain.models.ErrorType
 import com.example.productinfo.domain.models.RequestParam
 import com.example.productinfo.domain.usecases.ProductsUseCase
+import com.example.productinfo.utils.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -21,6 +22,11 @@ class ProductsScreenViewModel @Inject constructor(
 
     init {
         getProductsData()
+        _state.update { productsState ->
+            productsState.copy(
+                error = ErrorType.UNKNOWN
+            )
+        }
     }
 
     fun onEvent(event: ProductsEvent) {
@@ -28,10 +34,20 @@ class ProductsScreenViewModel @Inject constructor(
             ProductsEvent.OnLoading -> {
                 _state.update { productsState ->
                     productsState.copy(
-                        isLoading = true
+                        isLoading = true,
+                        error = null
                     )
                 }
                 getProductsData()
+            }
+            ProductsEvent.OnHideAlert -> {
+                if(state.value.productData != null && state.value.productData?.products?.isNotEmpty() == true) {
+                    _state.update { productsState ->
+                        productsState.copy(
+                            error = null
+                        )
+                    }
+                }
             }
         }
     }
@@ -43,16 +59,26 @@ class ProductsScreenViewModel @Inject constructor(
                     getParams()
                 )
 
-                _state.update { productsState ->
-                    productsState.copy(
-                        productData = productsData.data,
-                        products = state.value.products + productsData.data!!.products,
-                        isLoading = false
-                    )
+                when (productsData) {
+                    is Resource.Success -> {
+                        _state.update { productsState ->
+                            productsState.copy(
+                                productData = productsData.data,
+                                products = state.value.products + productsData.data!!.products,
+                                isLoading = false,
+                            )
+                        }
+                    }
+
+                    is Resource.Error -> {
+                        _state.update { productsState ->
+                            productsState.copy(
+                                error =  productsData.error ?: ErrorType.UNKNOWN
+                            )
+                        }
+                    }
                 }
             }
-
-            Log.d("TEST", "load: ${state.value.products}")
         }
     }
 
