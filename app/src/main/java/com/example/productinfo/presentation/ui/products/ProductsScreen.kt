@@ -11,13 +11,13 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
@@ -60,13 +60,19 @@ fun ProductsScreen(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalItemSpacing = 16.dp
         ) {
-            state.value.productData?.let { data ->
-                items(data.products.size) { index ->
-                    ProductItem(
-                        product = data.products[index]
-                    )
+            items(state.value.products.size) { index ->
+                if (index >= state.value.products.size - 1 && !state.value.isLoading) {
+                    viewModel.onEvent(ProductsEvent.OnLoading)
                 }
+                ProductItem(
+                    product = state.value.products[index]
+                )
             }
+        }
+        if (state.value.isLoading) {
+            CircularProgressIndicator(
+                modifier = Modifier.padding(vertical = 16.dp)
+            )
         }
     }
 }

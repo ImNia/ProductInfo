@@ -62,7 +62,6 @@ dependencies {
     implementation("androidx.compose.ui:ui")
     implementation("androidx.compose.ui:ui-graphics")
     implementation("androidx.compose.ui:ui-tooling-preview")
-    implementation("androidx.compose.material3:material3")
     implementation("io.coil-kt:coil-compose:2.6.0")
 
     //Navigation
@@ -71,6 +70,7 @@ dependencies {
 
     //Hilt
     implementation("com.google.dagger:hilt-android:2.50")
+    implementation("androidx.compose.material3:material3-android:1.2.1")
     kapt("com.google.dagger:hilt-android-compiler:2.50")
     implementation ("androidx.hilt:hilt-navigation-compose:1.2.0")
 

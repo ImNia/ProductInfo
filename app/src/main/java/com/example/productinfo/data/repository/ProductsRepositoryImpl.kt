@@ -6,6 +6,7 @@ import android.net.NetworkCapabilities
 import com.example.productinfo.data.converter.mapToProducts
 import com.example.productinfo.data.models.Response
 import com.example.productinfo.data.network.DummyApiService
+import com.example.productinfo.domain.models.RequestParam
 import com.example.productinfo.domain.repository.ProductsRepository
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
@@ -16,14 +17,17 @@ class ProductsRepositoryImpl @Inject constructor(
     private val api: DummyApiService,
     @ApplicationContext private val context: Context
 ): ProductsRepository {
-    override suspend fun getProducts(dto: Any): Response {
+    override suspend fun getProducts(params: RequestParam): Response {
         if (!isConnected()) {
             return Response().apply { code = -1 }
         }
 
         return withContext(Dispatchers.IO) {
             try {
-                val response = api.getProducts().mapToProducts()
+                val response = api.getProducts(
+                    params.skip,
+                    params.limit
+                ).mapToProducts()
                 response.apply { code = 200 }
             } catch (e: Throwable) {
                 Response().apply { code = 500 }
