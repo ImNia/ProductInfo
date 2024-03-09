@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">ProductInfo</string>
+    <string name="products_title">Продукты</string>
 </resources>
