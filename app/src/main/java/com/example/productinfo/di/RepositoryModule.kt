@@ -1,6 +1,8 @@
 package com.example.productinfo.di
 
+import com.example.productinfo.data.repository.ProductDetailRepositoryImpl
 import com.example.productinfo.data.repository.ProductsRepositoryImpl
+import com.example.productinfo.domain.repository.ProductDetailRepository
 import com.example.productinfo.domain.repository.ProductsRepository
 import dagger.Binds
 import dagger.Module
@@ -15,4 +17,8 @@ abstract class RepositoryModule {
     @Binds
     @Singleton
     abstract fun bindProductsRepository(repositoryImpl: ProductsRepositoryImpl): ProductsRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindProductDetailRepository(repositoryImpl: ProductDetailRepositoryImpl): ProductDetailRepository
 }

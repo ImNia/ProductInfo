@@ -1,5 +1,7 @@
 package com.example.productinfo.domain.models
 
+import com.example.productinfo.data.models.Response
+
 data class Product(
     val id: Long,
     val title: String,
@@ -12,4 +14,4 @@ data class Product(
     val category: String,
     val thumbnail: String,
     val images: List<String>,
-)
+): Response()
