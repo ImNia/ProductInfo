@@ -52,8 +52,7 @@ fun ProductsScreenContent(
         LazyVerticalStaggeredGrid(
             modifier = Modifier
                 .fillMaxWidth()
-                .weight(1f)
-                .background(colorResource(id = R.color.background)),
+                .weight(1f),
             columns = StaggeredGridCells.Fixed(2),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalItemSpacing = 16.dp

@@ -6,4 +6,8 @@
     <string name="error_not_connect">Проверьте подключение к интернету</string>
     <string name="error_unknown">Что-то пошло не так</string>
     <string name="error_button">Обновить</string>
+
+    <string name="rating_text">Рейтинг %1$s</string>
+    <string name="price_text">Цена %1$s</string>
+    <string name="description_text">Описание</string>
 </resources>

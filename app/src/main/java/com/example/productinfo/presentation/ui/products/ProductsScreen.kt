@@ -33,12 +33,11 @@ fun ProductsScreen(
             Text(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = 16.dp)
                     .height(40.dp)
                     .background(colorResource(id = R.color.background)),
                 text = stringResource(id = R.string.products_title),
                 style = Typography.titleMedium,
-                textAlign = TextAlign.Center
+                textAlign = TextAlign.Center,
             )
         }
     ) { innerPadding ->
