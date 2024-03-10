@@ -9,4 +9,5 @@ data class ProductsState(
     val products: List<Product> = listOf(),
     val isLoading: Boolean = false,
     val error: ErrorType? = null,
+    val existError: Boolean = false,
 )

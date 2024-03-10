@@ -1,6 +1,5 @@
 package com.example.productinfo.presentation.ui.products
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -62,6 +61,10 @@ fun ProductsScreen(
                                 stringResource(id = R.string.error_server)
                             }
 
+                            ErrorType.REQUEST_TIMEOUT -> {
+                                stringResource(id = R.string.error_not_connect)
+                            }
+
                             ErrorType.UNKNOWN -> {
                                 stringResource(id = R.string.error_unknown)
                             }
@@ -87,10 +90,12 @@ fun ProductsScreen(
             )
         }
         ProductsScreenContent(
-            innerPadding = innerPadding,
+            modifier = Modifier
+                .padding(innerPadding),
             products = state.value.products,
             onEvent = viewModel::onEvent,
-            isLoading = state.value.isLoading
+            isLoading = state.value.isLoading,
+            existError = state.value.existError
         )
     }
 }

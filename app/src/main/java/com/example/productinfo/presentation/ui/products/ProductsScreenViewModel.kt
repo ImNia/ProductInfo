@@ -16,37 +16,41 @@ import javax.inject.Inject
 @HiltViewModel
 class ProductsScreenViewModel @Inject constructor(
     private val productsUseCase: ProductsUseCase
-): ViewModel() {
+) : ViewModel() {
     private var _state = MutableStateFlow(ProductsState())
     val state = _state.asStateFlow()
 
     init {
-        getProductsData()
         _state.update { productsState ->
             productsState.copy(
-                error = ErrorType.UNKNOWN
+                isLoading = true,
+                error = null,
+                existError = false
             )
         }
+        getProductsData()
     }
 
     fun onEvent(event: ProductsEvent) {
-        when(event) {
+        when (event) {
             ProductsEvent.OnLoading -> {
                 _state.update { productsState ->
                     productsState.copy(
                         isLoading = true,
-                        error = null
+                        error = null,
+                        existError = false
                     )
                 }
                 getProductsData()
             }
+
             ProductsEvent.OnHideAlert -> {
-                if(state.value.productData != null && state.value.productData?.products?.isNotEmpty() == true) {
-                    _state.update { productsState ->
-                        productsState.copy(
-                            error = null
-                        )
-                    }
+                _state.update { productsState ->
+                    productsState.copy(
+                        error = null,
+                        isLoading = false,
+                        existError = true,
+                    )
                 }
             }
         }
@@ -54,7 +58,7 @@ class ProductsScreenViewModel @Inject constructor(
 
     private fun getProductsData() {
         viewModelScope.launch {
-            if(!isEndScreen()) {
+            if (!isEndScreen()) {
                 val productsData = productsUseCase.getProducts(
                     getParams()
                 )
@@ -66,6 +70,7 @@ class ProductsScreenViewModel @Inject constructor(
                                 productData = productsData.data,
                                 products = state.value.products + productsData.data!!.products,
                                 isLoading = false,
+                                existError = false,
                             )
                         }
                     }
@@ -73,7 +78,8 @@ class ProductsScreenViewModel @Inject constructor(
                     is Resource.Error -> {
                         _state.update { productsState ->
                             productsState.copy(
-                                error =  productsData.error ?: ErrorType.UNKNOWN
+                                error = productsData.error ?: ErrorType.UNKNOWN,
+                                existError = true,
                             )
                         }
                     }
@@ -99,7 +105,7 @@ class ProductsScreenViewModel @Inject constructor(
     }
 
     private fun isEndScreen(): Boolean {
-        return if(state.value.productData == null) {
+        return if (state.value.productData == null) {
             false
         } else {
             state.value.productData!!.total <= (state.value.productData!!.skip + LIMIT_DATA)

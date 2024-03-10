@@ -17,6 +17,9 @@ class ProductsUseCase @Inject constructor(
             -1 -> {
                 Resource.Error(ErrorType.NOT_CONNECT)
             }
+            408 -> {
+                Resource.Error(ErrorType.REQUEST_TIMEOUT)
+            }
             200 -> {
                 with(response as Products) {
                     Resource.Success(this)

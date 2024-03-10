@@ -30,6 +30,11 @@ fun ErrorScreen(
                     painterResource(id = R.drawable.ic_error)
                 }
 
+                ErrorType.REQUEST_TIMEOUT -> {
+
+                    painterResource(id = R.drawable.ic_not_connect)
+                }
+
                 ErrorType.UNKNOWN -> {
                     painterResource(id = R.drawable.ic_error)
                 }
@@ -44,6 +49,10 @@ fun ErrorScreen(
 
                 ErrorType.SERVER_ERROR -> {
                     stringResource(id = R.string.error_server)
+                }
+
+                ErrorType.REQUEST_TIMEOUT -> {
+                    stringResource(id = R.string.error_not_connect)
                 }
 
                 ErrorType.UNKNOWN -> {
