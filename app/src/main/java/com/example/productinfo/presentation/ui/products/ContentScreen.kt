@@ -1,6 +1,7 @@
 package com.example.productinfo.presentation.ui.products
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -10,8 +11,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridItemSpan
@@ -29,6 +28,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.example.productinfo.R
 import com.example.productinfo.domain.models.Product
@@ -37,6 +37,7 @@ import com.example.productinfo.ui.theme.Typography
 @Composable
 fun ProductsScreenContent(
     modifier: Modifier = Modifier,
+    navController: NavController,
     products: List<Product>,
     onEvent: (ProductsEvent) -> Unit,
     isLoading: Boolean = false,
@@ -62,7 +63,12 @@ fun ProductsScreenContent(
                     onEvent(ProductsEvent.OnLoading)
                 }
                 ProductItem(
-                    product = products[index]
+                    product = products[index],
+                    onClick = {
+                        navController.navigate(
+                            "productDetailScreen/${products[index].id}"
+                        )
+                    }
                 )
             }
 
@@ -103,10 +109,14 @@ fun ProductsScreenContent(
 @Composable
 fun ProductItem(
     product: Product,
+    onClick: () -> Unit
 ) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
+            .clickable {
+                onClick.invoke()
+            }
             .padding(horizontal = 8.dp)
             .clip(RoundedCornerShape(16.dp))
             .background(colorResource(id = R.color.white))

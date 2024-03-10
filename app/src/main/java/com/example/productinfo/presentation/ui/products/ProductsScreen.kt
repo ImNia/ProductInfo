@@ -92,6 +92,7 @@ fun ProductsScreen(
         ProductsScreenContent(
             modifier = Modifier
                 .padding(innerPadding),
+            navController = navController,
             products = state.value.products,
             onEvent = viewModel::onEvent,
             isLoading = state.value.isLoading,
