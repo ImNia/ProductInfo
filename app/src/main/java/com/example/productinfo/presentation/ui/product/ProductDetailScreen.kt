@@ -16,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
@@ -34,9 +35,9 @@ fun ProductDetailScreen(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .background(colorResource(id = R.color.background))
-                    .padding(top = 16.dp)
-                    .height(40.dp),
+                    .height(60.dp)
+                    .background(colorResource(id = R.color.white))
+                    .padding(vertical = 10.dp),
             ) {
                 Image(
                     modifier = Modifier
@@ -52,10 +53,13 @@ fun ProductDetailScreen(
                     modifier = Modifier
                         .weight(1f)
                         .fillMaxWidth()
+                        .padding(start = 16.dp, end = 32.dp)
                         .align(Alignment.CenterVertically),
                     text = state.value.product?.title ?: "",
                     style = Typography.titleMedium,
-                    textAlign = TextAlign.Center
+                    textAlign = TextAlign.Center,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
                 )
             }
         }
@@ -65,7 +69,7 @@ fun ProductDetailScreen(
             ProductDetail(
                 modifier = Modifier
                     .padding(innerPadding)
-                    .background(colorResource(id = R.color.background)),
+                    .background(colorResource(id = R.color.white)),
                 product = product
             )
         }

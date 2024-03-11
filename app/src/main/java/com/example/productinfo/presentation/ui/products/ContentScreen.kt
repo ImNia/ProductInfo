@@ -46,13 +46,11 @@ fun ProductsScreenContent(
     Column(
         modifier = modifier
             .fillMaxSize()
-            .background(colorResource(id = R.color.background))
-            .padding(bottom = 16.dp),
+            .background(colorResource(id = R.color.white)),
     ) {
         LazyVerticalStaggeredGrid(
             modifier = Modifier
-                .fillMaxWidth()
-                .weight(1f),
+                .fillMaxSize(),
             columns = StaggeredGridCells.Fixed(2),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalItemSpacing = 16.dp
@@ -118,13 +116,14 @@ fun ProductItem(
             }
             .padding(horizontal = 8.dp)
             .clip(RoundedCornerShape(16.dp))
-            .background(colorResource(id = R.color.white))
+            .background(colorResource(id = R.color.background))
             .padding(bottom = 16.dp),
         verticalArrangement = Arrangement.SpaceBetween
     ) {
         AsyncImage(
             modifier = Modifier
                 .fillMaxWidth()
+                .padding(2.dp)
                 .clip(RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp)),
             placeholder = painterResource(id = R.drawable.ic_image),
             model = product.thumbnail,

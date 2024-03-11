@@ -1,13 +1,13 @@
 <resources>
     <string name="app_name">ProductInfo</string>
-    <string name="products_title">Продукты</string>
-    <string name="error_title">Oшибка</string>
-    <string name="error_server">Ошибка сервера</string>
-    <string name="error_not_connect">Проверьте подключение к интернету</string>
-    <string name="error_unknown">Что-то пошло не так</string>
-    <string name="error_button">Обновить</string>
+    <string name="products_title">Products</string>
+    <string name="error_title">Error</string>
+    <string name="error_server">Internal server error</string>
+    <string name="error_not_connect">Check your internet connection</string>
+    <string name="error_unknown">Something went wrong</string>
+    <string name="error_button">Refresh</string>
 
-    <string name="rating_text">Рейтинг %1$s</string>
-    <string name="price_text">Цена %1$s</string>
-    <string name="description_text">Описание</string>
+    <string name="rating_text">Rating %1$s</string>
+    <string name="price_text">Price %1$s</string>
+    <string name="description_text">Description</string>
 </resources>

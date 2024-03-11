@@ -84,6 +84,12 @@ class ProductsScreenViewModel @Inject constructor(
                         }
                     }
                 }
+            } else {
+                _state.update { productsState ->
+                    productsState.copy(
+                        isLoading = false
+                    )
+                }
             }
         }
     }

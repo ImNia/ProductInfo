@@ -33,8 +33,9 @@ fun ProductsScreen(
             Text(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(40.dp)
-                    .background(colorResource(id = R.color.background)),
+                    .height(60.dp)
+                    .background(colorResource(id = R.color.white))
+                    .padding(vertical = 10.dp),
                 text = stringResource(id = R.string.products_title),
                 style = Typography.titleMedium,
                 textAlign = TextAlign.Center,
