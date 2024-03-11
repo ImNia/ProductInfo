@@ -101,11 +101,7 @@ fun ProductsScreenContent(
 
             if (products.isEmpty() && query.trim() != "") {
                 item (span = StaggeredGridItemSpan.FullLine) {
-                    EmptyScreen(
-                        onClick = {
-                            onEvent(ProductsEvent.OnSearch(""))
-                        }
-                    )
+                    EmptyScreen()
                 }
             } else {
                 items(products.size) { index ->

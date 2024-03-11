@@ -18,7 +18,6 @@ import com.example.productinfo.ui.theme.Typography
 @Composable
 fun EmptyScreen(
     modifier: Modifier = Modifier,
-    onClick: () -> Unit
 ) {
     Column(
         modifier = modifier
