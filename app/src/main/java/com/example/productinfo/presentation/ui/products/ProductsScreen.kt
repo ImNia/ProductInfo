@@ -94,6 +94,7 @@ fun ProductsScreen(
                 .padding(innerPadding),
             navController = navController,
             products = state.value.products,
+            categories = state.value.categories,
             onEvent = viewModel::onEvent,
             isLoading = state.value.isLoading,
             existError = state.value.existError

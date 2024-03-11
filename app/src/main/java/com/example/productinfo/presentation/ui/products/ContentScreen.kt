@@ -5,12 +5,14 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridItemSpan
@@ -31,7 +33,10 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.example.productinfo.R
+import com.example.productinfo.domain.models.Categories
 import com.example.productinfo.domain.models.Product
+import com.example.productinfo.ui.theme.CategoryColor
+import com.example.productinfo.ui.theme.RatingColor
 import com.example.productinfo.ui.theme.Typography
 
 @Composable
@@ -39,6 +44,7 @@ fun ProductsScreenContent(
     modifier: Modifier = Modifier,
     navController: NavController,
     products: List<Product>,
+    categories: Categories?,
     onEvent: (ProductsEvent) -> Unit,
     isLoading: Boolean = false,
     existError: Boolean = false,
@@ -48,6 +54,15 @@ fun ProductsScreenContent(
             .fillMaxSize()
             .background(colorResource(id = R.color.white)),
     ) {
+        categories?.let {
+            CategoriesRow(
+                modifier = Modifier.padding(vertical = 16.dp),
+                categories = it,
+                onClick = { category ->
+                    onEvent(ProductsEvent.OnCategorySelect(category))
+                }
+            )
+        }
         LazyVerticalStaggeredGrid(
             modifier = Modifier
                 .fillMaxSize(),
@@ -150,5 +165,31 @@ fun ProductItem(
             textAlign = TextAlign.Justify,
             style = Typography.bodySmall
         )
+    }
+}
+
+@Composable
+fun CategoriesRow(
+    modifier: Modifier = Modifier,
+    categories: Categories,
+    onClick: (String) -> Unit,
+) {
+    LazyRow(
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        categories.categories.forEach { category ->
+            item {
+                Text(
+                    modifier = modifier
+                        .padding(horizontal = 4.dp)
+                        .clip(RoundedCornerShape(16.dp))
+                        .background(CategoryColor)
+                        .padding(horizontal = 16.dp, vertical = 8.dp)
+                        .clickable { onClick.invoke(category) },
+                    text = category,
+                    style = Typography.bodySmall
+                )
+            }
+        }
     }
 }
