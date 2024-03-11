@@ -1,7 +1,7 @@
 package com.example.productinfo.domain.repository
 
-import com.example.productinfo.data.models.Response
+import com.example.productinfo.data.network.dto.ProductDto
 
 interface ProductDetailRepository {
-    suspend fun getProductDetail(productId: String): Response
+    suspend fun getProductDetail(productId: String): ProductDto
 }

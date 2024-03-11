@@ -1,6 +1,5 @@
 package com.example.productinfo.data.network.dto
 
-import com.example.productinfo.data.models.Response
 import com.google.gson.annotations.SerializedName
 
 data class ProductsDto(
@@ -12,4 +11,4 @@ data class ProductsDto(
     val skip: Int,
     @SerializedName("limit")
     val limit: Int,
-): Response()
+)
