@@ -11,8 +11,9 @@ import javax.inject.Inject
 class ProductsInteractor @Inject constructor(
     private val repository: ProductsRepository
 ) {
-    suspend fun getProducts(params: RequestParam): Resource<Products> {
-        val response = repository.getProducts(params)
+    suspend fun getProducts(category: String?, params: RequestParam): Resource<Products> {
+        val response = if (category == null) repository.getProducts(params)
+            else repository.getProductsByCategory(category, params)
 
         return when (response.code) {
             -1 -> {

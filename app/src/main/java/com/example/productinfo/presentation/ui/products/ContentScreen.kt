@@ -5,7 +5,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -36,7 +35,7 @@ import com.example.productinfo.R
 import com.example.productinfo.domain.models.Categories
 import com.example.productinfo.domain.models.Product
 import com.example.productinfo.ui.theme.CategoryColor
-import com.example.productinfo.ui.theme.RatingColor
+import com.example.productinfo.ui.theme.CategorySelectedColor
 import com.example.productinfo.ui.theme.Typography
 
 @Composable
@@ -45,6 +44,7 @@ fun ProductsScreenContent(
     navController: NavController,
     products: List<Product>,
     categories: Categories?,
+    selectedCategory: String? = null,
     onEvent: (ProductsEvent) -> Unit,
     isLoading: Boolean = false,
     existError: Boolean = false,
@@ -58,9 +58,10 @@ fun ProductsScreenContent(
             CategoriesRow(
                 modifier = Modifier.padding(vertical = 16.dp),
                 categories = it,
+                selected = selectedCategory,
                 onClick = { category ->
                     onEvent(ProductsEvent.OnCategorySelect(category))
-                }
+                },
             )
         }
         LazyVerticalStaggeredGrid(
@@ -172,6 +173,7 @@ fun ProductItem(
 fun CategoriesRow(
     modifier: Modifier = Modifier,
     categories: Categories,
+    selected: String?,
     onClick: (String) -> Unit,
 ) {
     LazyRow(
@@ -183,7 +185,7 @@ fun CategoriesRow(
                     modifier = modifier
                         .padding(horizontal = 4.dp)
                         .clip(RoundedCornerShape(16.dp))
-                        .background(CategoryColor)
+                        .background(if (category.trim() == selected?.trim()) CategorySelectedColor else CategoryColor)
                         .padding(horizontal = 16.dp, vertical = 8.dp)
                         .clickable { onClick.invoke(category) },
                     text = category,

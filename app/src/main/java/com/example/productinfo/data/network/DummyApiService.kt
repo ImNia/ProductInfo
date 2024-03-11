@@ -16,6 +16,13 @@ interface DummyApiService {
     @GET("products/categories")
     suspend fun getCategories(): List<String>
 
+    @GET("products/category/{category}")
+    suspend fun getProductByCategory(
+        @Path("category") category: String,
+        @Query("skip") skip: Int,
+        @Query("limit") limit: Int,
+    ): ProductsDto
+
     @GET("products/{productId}")
     suspend fun getProductDetail(
         @Path("productId") productId: String,

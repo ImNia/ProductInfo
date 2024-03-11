@@ -1,6 +1,5 @@
 package com.example.productinfo.presentation.ui.products
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.productinfo.domain.models.ErrorType
@@ -43,7 +42,7 @@ class ProductsScreenViewModel @Inject constructor(
                         existError = false
                     )
                 }
-                getProductsData()
+                getProductsData(state.value.selectedCategories)
             }
 
             ProductsEvent.OnHideAlert -> {
@@ -57,15 +56,26 @@ class ProductsScreenViewModel @Inject constructor(
             }
 
             is ProductsEvent.OnCategorySelect -> {
-                getDataByCategory(event.category)
+                val category =
+                    if (state.value.selectedCategories?.trim() == event.category.trim()) null else event.category
+
+                _state.update { productsState ->
+                    productsState.copy(
+                        loadData = null,
+                        products = listOf(),
+                        selectedCategories = category
+                    )
+                }
+                getProductsData(category)
             }
         }
     }
 
-    private fun getProductsData() {
+    private fun getProductsData(category: String? = null) {
         viewModelScope.launch {
             if (!isEndScreen()) {
                 val productsData = productsInteractor.getProducts(
+                    category,
                     getParams()
                 )
 
@@ -73,7 +83,7 @@ class ProductsScreenViewModel @Inject constructor(
                     is Resource.Success -> {
                         _state.update { productsState ->
                             productsState.copy(
-                                productData = productsData.data,
+                                loadData = productsData.data,
                                 products = state.value.products + productsData.data!!.products,
                                 isLoading = false,
                                 existError = false,
@@ -100,9 +110,6 @@ class ProductsScreenViewModel @Inject constructor(
         }
     }
 
-    private fun getDataByCategory(category: String) {
-
-    }
     private fun getCategories() {
         viewModelScope.launch {
             val data = productsInteractor.getCategories()
@@ -114,16 +121,17 @@ class ProductsScreenViewModel @Inject constructor(
             }
         }
     }
+
     private fun getParams(): RequestParam {
-        return if (state.value.productData == null) {
+        return if (state.value.loadData == null || state.value.loadData?.skip == 0) {
             RequestParam(
                 skip = 0,
                 limit = LIMIT_DATA
             )
         } else {
-            state.value.productData?.let {
+            state.value.loadData?.let {
                 RequestParam(
-                    skip = state.value.productData!!.skip + LIMIT_DATA,
+                    skip = state.value.loadData!!.skip + LIMIT_DATA,
                     limit = LIMIT_DATA
                 )
             } ?: throw Throwable("Sometimes went wrong")
@@ -131,10 +139,10 @@ class ProductsScreenViewModel @Inject constructor(
     }
 
     private fun isEndScreen(): Boolean {
-        return if (state.value.productData == null) {
+        return if (state.value.loadData == null) {
             false
         } else {
-            state.value.productData!!.total <= (state.value.productData!!.skip + LIMIT_DATA)
+            state.value.loadData!!.total <= (state.value.loadData!!.skip + LIMIT_DATA)
         }
     }
 

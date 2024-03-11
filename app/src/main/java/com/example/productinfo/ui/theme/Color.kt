@@ -12,3 +12,4 @@ val Pink40 = Color(0xFF7D5260)
 
 val RatingColor = Color(0xFFF0EE0E)
 val CategoryColor = Color(0x0D000000)
+val CategorySelectedColor = Color(0x0FFF8C5B8)
