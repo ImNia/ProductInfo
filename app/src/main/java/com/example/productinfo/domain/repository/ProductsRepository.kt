@@ -5,4 +5,5 @@ import com.example.productinfo.domain.models.RequestParam
 
 interface ProductsRepository {
     suspend fun getProducts(params: RequestParam): Response
+    suspend fun getCategories(): Response
 }

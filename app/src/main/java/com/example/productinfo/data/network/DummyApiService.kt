@@ -13,6 +13,9 @@ interface DummyApiService {
         @Query("limit") limit: Int,
     ): ProductsDto
 
+    @GET("products/categories")
+    suspend fun getCategories(): List<String>
+
     @GET("products/{productId}")
     suspend fun getProductDetail(
         @Path("productId") productId: String,

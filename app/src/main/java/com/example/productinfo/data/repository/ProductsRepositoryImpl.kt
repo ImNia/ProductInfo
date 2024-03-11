@@ -7,6 +7,7 @@ import android.util.Log
 import com.example.productinfo.data.converter.mapToProducts
 import com.example.productinfo.data.models.Response
 import com.example.productinfo.data.network.DummyApiService
+import com.example.productinfo.domain.models.Categories
 import com.example.productinfo.domain.models.RequestParam
 import com.example.productinfo.domain.repository.ProductsRepository
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -35,6 +36,25 @@ class ProductsRepositoryImpl @Inject constructor(
                 Response().apply { code = 408 }
             } catch (e: Throwable) {
                 Log.d("TEST", "error: ${e.message} ${e.stackTrace}")
+                Response().apply { code = 500 }
+            }
+        }
+    }
+
+    override suspend fun getCategories(): Response {
+        if (!isConnected()) {
+            return Response().apply { code = -1 }
+        }
+
+        return withContext(Dispatchers.IO) {
+            try {
+                val response = Categories(
+                    categories = api.getCategories()
+                )
+                response.apply { code = 200 }
+            } catch (e: SocketTimeoutException) {
+                Response().apply { code = 408 }
+            } catch (e: Throwable) {
                 Response().apply { code = 500 }
             }
         }

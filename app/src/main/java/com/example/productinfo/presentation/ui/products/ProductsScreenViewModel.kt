@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.productinfo.domain.models.ErrorType
 import com.example.productinfo.domain.models.RequestParam
-import com.example.productinfo.domain.usecases.ProductsUseCase
+import com.example.productinfo.domain.usecases.ProductsInteractor
 import com.example.productinfo.utils.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -15,7 +15,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ProductsScreenViewModel @Inject constructor(
-    private val productsUseCase: ProductsUseCase
+    private val productsInteractor: ProductsInteractor
 ) : ViewModel() {
     private var _state = MutableStateFlow(ProductsState())
     val state = _state.asStateFlow()
@@ -29,6 +29,7 @@ class ProductsScreenViewModel @Inject constructor(
             )
         }
         getProductsData()
+        getCategories()
     }
 
     fun onEvent(event: ProductsEvent) {
@@ -59,7 +60,7 @@ class ProductsScreenViewModel @Inject constructor(
     private fun getProductsData() {
         viewModelScope.launch {
             if (!isEndScreen()) {
-                val productsData = productsUseCase.getProducts(
+                val productsData = productsInteractor.getProducts(
                     getParams()
                 )
 
@@ -94,6 +95,17 @@ class ProductsScreenViewModel @Inject constructor(
         }
     }
 
+    private fun getCategories() {
+        viewModelScope.launch {
+            val data = productsInteractor.getCategories()
+
+            _state.update { productsState ->
+                productsState.copy(
+                    categories = data.data
+                )
+            }
+        }
+    }
     private fun getParams(): RequestParam {
         return if (state.value.productData == null) {
             RequestParam(
