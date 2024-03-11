@@ -3,10 +3,8 @@ package com.example.productinfo.presentation.ui.products
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -42,17 +40,6 @@ fun EmptyScreen(
             text = stringResource(id = R.string.empty_text),
             style = Typography.bodyMedium
         )
-        /*Button(
-            modifier = Modifier
-                .padding(vertical = 8.dp)
-                .align(Alignment.CenterHorizontally),
-            onClick = { onClick.invoke() }
-        ) {
-            Text(
-                text = stringResource(id = R.string.update_button),
-                style = Typography.bodyMedium
-            )
-        }*/
     }
 
 }
