@@ -47,4 +47,27 @@ class ProductDetailViewModel @Inject constructor(
             }
         }
     }
+
+    fun onEvent(event: ProductDetailEvent) {
+        when (event) {
+            ProductDetailEvent.OnLoading -> {
+                _state.update { productsState ->
+                    productsState.copy(
+                        isLoading = true,
+                        error = null,
+                    )
+                }
+                getData()
+            }
+
+            ProductDetailEvent.OnHideAlert -> {
+                _state.update { productsState ->
+                    productsState.copy(
+                        error = null,
+                        isLoading = false,
+                    )
+                }
+            }
+        }
+    }
 }

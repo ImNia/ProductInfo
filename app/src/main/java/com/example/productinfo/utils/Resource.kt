@@ -4,6 +4,7 @@ import android.util.Log
 import com.example.productinfo.domain.models.ErrorType
 import retrofit2.HttpException
 import java.io.IOException
+import java.net.SocketTimeoutException
 
 sealed class Resource<T>(val data: T? = null, val error: ErrorType? = null) {
     class Success<T>(data: T) : Resource<T>(data)
@@ -15,6 +16,9 @@ sealed class Resource<T>(val data: T? = null, val error: ErrorType? = null) {
                 Success(data())
             } catch (e: ConnectedException) {
                 Error(ErrorType.NOT_CONNECT)
+            } catch (e: SocketTimeoutException) {
+                e.printStackTrace()
+                Error(ErrorType.REQUEST_TIMEOUT)
             } catch (e: IOException) {
                 e.printStackTrace()
                 Log.d("TEST", "code: ${e.message} ${e.stackTrace}")
@@ -32,24 +36,6 @@ sealed class Resource<T>(val data: T? = null, val error: ErrorType? = null) {
                     }
                 }
             }
-                /*
-            return when (response.code) {
-                -1 -> {
-                    Resource.Error(ErrorType.NOT_CONNECT)
-                }
-
-                408 -> {
-                    Resource.Error(ErrorType.REQUEST_TIMEOUT)
-                }
-
-                200 -> {
-                    Resource.Success(data)
-                }
-
-                else -> {
-                    Resource.Error(ErrorType.SERVER_ERROR)
-                }
-            }*/
         }
     }
 }

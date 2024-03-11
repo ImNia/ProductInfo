@@ -43,6 +43,7 @@ class ProductsScreenViewModel @Inject constructor(
                     )
                 }
                 getProductsData(state.value.selectedCategories)
+                getCategories()
             }
 
             ProductsEvent.OnHideAlert -> {

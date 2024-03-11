@@ -17,6 +17,7 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -40,16 +41,28 @@ import com.example.productinfo.ui.theme.Typography
 fun ProductDetail(
     modifier: Modifier = Modifier,
     product: Product,
+    isLoading: Boolean = false,
 ) {
     val pagerState = rememberPagerState(
         pageCount = {
             product.images.size
         }
     )
+
     Column(
         modifier = modifier
             .padding(horizontal = 16.dp)
     ) {
+        if (isLoading) {
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                CircularProgressIndicator(
+                    modifier = Modifier.size(32.dp, 32.dp)
+                )
+            }
+        }
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -95,7 +108,7 @@ fun ProductDetail(
             }
         }
 
-        Row (
+        Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(vertical = 8.dp),
@@ -108,7 +121,7 @@ fun ProductDetail(
             )
         }
 
-        Row (
+        Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(vertical = 8.dp),
@@ -130,7 +143,7 @@ fun ProductDetail(
                 color = Color.Black,
             )
         }
-        Column (
+        Column(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(vertical = 8.dp)
