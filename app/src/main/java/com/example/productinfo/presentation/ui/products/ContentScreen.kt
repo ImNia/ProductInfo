@@ -35,6 +35,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
@@ -98,18 +99,28 @@ fun ProductsScreenContent(
                 }
             }
 
-            items(products.size) { index ->
-                if (index >= products.size - 1 && !isLoading && !existError) {
-                    onEvent(ProductsEvent.OnLoading)
+            if (products.isEmpty() && query.trim() != "") {
+                item (span = StaggeredGridItemSpan.FullLine) {
+                    EmptyScreen(
+                        onClick = {
+                            onEvent(ProductsEvent.OnSearch(""))
+                        }
+                    )
                 }
-                ProductItem(
-                    product = products[index],
-                    onClick = {
-                        navController.navigate(
-                            "productDetailScreen/${products[index].id}"
-                        )
+            } else {
+                items(products.size) { index ->
+                    if (index >= products.size - 1 && !isLoading && !existError) {
+                        onEvent(ProductsEvent.OnLoading)
                     }
-                )
+                    ProductItem(
+                        product = products[index],
+                        onClick = {
+                            navController.navigate(
+                                "productDetailScreen/${products[index].id}"
+                            )
+                        }
+                    )
+                }
             }
 
             item(span = StaggeredGridItemSpan.FullLine) {
@@ -231,6 +242,7 @@ fun SearchBar(
 ) {
     var value by remember { mutableStateOf(query) }
     val keyboardController = LocalSoftwareKeyboardController.current
+    val focusManager = LocalFocusManager.current
 
     OutlinedTextField(
         modifier = Modifier
@@ -255,6 +267,7 @@ fun SearchBar(
         keyboardActions = KeyboardActions(
             onDone = {
                 keyboardController?.hide()
+                focusManager.clearFocus()
                 onEnterValue.invoke(value)
             }
         ),
@@ -263,6 +276,21 @@ fun SearchBar(
                 painter = painterResource(id = R.drawable.ic_search),
                 contentDescription = null
             )
+        },
+        trailingIcon = {
+            if(value.isNotBlank()) {
+                Icon(
+                    modifier = Modifier
+                        .clickable {
+                            keyboardController?.hide()
+                            focusManager.clearFocus()
+                            value = ""
+                            onEnterValue.invoke(value)
+                        },
+                    painter = painterResource(id = R.drawable.ic_close),
+                    contentDescription = null
+                )
+            }
         },
         colors = TextFieldDefaults.outlinedTextFieldColors(
             focusedBorderColor = Color.Transparent,

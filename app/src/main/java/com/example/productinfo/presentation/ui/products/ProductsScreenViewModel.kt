@@ -79,10 +79,10 @@ class ProductsScreenViewModel @Inject constructor(
                         error = null,
                         existError = false,
                         selectedCategories = null,
-                        query = event.query
+                        query = event.query.trim()
                     )
                 }
-                search(event.query)
+                search(event.query.trim())
             }
         }
     }

@@ -10,4 +10,6 @@
     <string name="rating_text">Rating %1$s</string>
     <string name="price_text">Price %1$s</string>
     <string name="description_text">Description</string>
+    <string name="empty_text">Nothing was found\nClear or update search</string>
+    <string name="update_button">Clear search</string>
 </resources>
