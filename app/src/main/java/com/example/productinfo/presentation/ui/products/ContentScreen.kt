@@ -59,6 +59,7 @@ fun ProductsScreenContent(
     products: List<Product>,
     categories: Categories?,
     selectedCategory: String? = null,
+    query: String = "",
     onEvent: (ProductsEvent) -> Unit,
     isLoading: Boolean = false,
     existError: Boolean = false,
@@ -77,18 +78,18 @@ fun ProductsScreenContent(
         ) {
             item (span = StaggeredGridItemSpan.FullLine) {
                 SearchBar(
-                    query = "",
+                    query = query,
                     onEnterValue = { query ->
                         onEvent(ProductsEvent.OnSearch(query.trim()))
                     }
                 )
             }
 
-            categories?.let {
+            if(categories != null && query.trim() == "") {
                 item (span = StaggeredGridItemSpan.FullLine) {
                     CategoriesRow(
                         modifier = Modifier.padding(vertical = 16.dp),
-                        categories = it,
+                        categories = categories,
                         selected = selectedCategory,
                         onClick = { category ->
                             onEvent(ProductsEvent.OnCategorySelect(category))

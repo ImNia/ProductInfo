@@ -13,4 +13,5 @@ data class ProductsState(
     val existError: Boolean = false,
     val categories: Categories? = null,
     val selectedCategories: String? = null,
+    val query: String = ""
 )

@@ -96,6 +96,7 @@ fun ProductsScreen(
                 products = state.value.products,
                 categories = state.value.categories,
                 selectedCategory = state.value.selectedCategories,
+                query = state.value.query,
                 onEvent = viewModel::onEvent,
                 isLoading = state.value.isLoading,
                 existError = state.value.existError

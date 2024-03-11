@@ -7,4 +7,5 @@ interface ProductsRepository {
     suspend fun getProducts(params: RequestParam): Response
     suspend fun getCategories(): Response
     suspend fun getProductsByCategory(category: String, params: RequestParam): Response
+    suspend fun search(query: String, params: RequestParam): Response
 }

@@ -82,6 +82,28 @@ class ProductsRepositoryImpl @Inject constructor(
         }
     }
 
+    override suspend fun search(query: String, params: RequestParam): Response {
+        if (!isConnected()) {
+            return Response().apply { code = -1 }
+        }
+
+        return withContext(Dispatchers.IO) {
+            try {
+                val response = api.search(
+                    query,
+                    params.skip,
+                    params.limit,
+                ).mapToProducts()
+                response.apply { code = 200 }
+            } catch (e: SocketTimeoutException) {
+                Response().apply { code = 408 }
+            } catch (e: Throwable) {
+                Log.d("TEST", "error: ${e.message} ${e.stackTrace}")
+                Response().apply { code = 500 }
+            }
+        }
+    }
+
     private fun isConnected(): Boolean {
         val connectivityManager = context.getSystemService(
             Context.CONNECTIVITY_SERVICE) as ConnectivityManager

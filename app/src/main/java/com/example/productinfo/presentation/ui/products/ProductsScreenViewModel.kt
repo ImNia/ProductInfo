@@ -71,7 +71,18 @@ class ProductsScreenViewModel @Inject constructor(
             }
 
             is ProductsEvent.OnSearch -> {
-                Log.d("TEST", "search: ${event.query}")
+                _state.update { productsState ->
+                    productsState.copy(
+                        isLoading = true,
+                        loadData = null,
+                        products = listOf(),
+                        error = null,
+                        existError = false,
+                        selectedCategories = null,
+                        query = event.query
+                    )
+                }
+                search(event.query)
             }
         }
     }
@@ -81,6 +92,45 @@ class ProductsScreenViewModel @Inject constructor(
             if (!isEndScreen()) {
                 val productsData = productsInteractor.getProducts(
                     category,
+                    getParams()
+                )
+
+                when (productsData) {
+                    is Resource.Success -> {
+                        _state.update { productsState ->
+                            productsState.copy(
+                                loadData = productsData.data,
+                                products = state.value.products + productsData.data!!.products,
+                                isLoading = false,
+                                existError = false,
+                            )
+                        }
+                    }
+
+                    is Resource.Error -> {
+                        _state.update { productsState ->
+                            productsState.copy(
+                                error = productsData.error ?: ErrorType.UNKNOWN,
+                                existError = true,
+                            )
+                        }
+                    }
+                }
+            } else {
+                _state.update { productsState ->
+                    productsState.copy(
+                        isLoading = false
+                    )
+                }
+            }
+        }
+    }
+
+    private fun search(query: String) {
+        viewModelScope.launch {
+            if (!isEndScreen()) {
+                val productsData = productsInteractor.search(
+                    query,
                     getParams()
                 )
 

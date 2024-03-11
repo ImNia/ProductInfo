@@ -59,4 +59,28 @@ class ProductsInteractor @Inject constructor(
             }
         }
     }
+
+    suspend fun search(query: String, params: RequestParam): Resource<Products> {
+        val response = repository.search(query, params)
+
+        return when (response.code) {
+            -1 -> {
+                Resource.Error(ErrorType.NOT_CONNECT)
+            }
+
+            408 -> {
+                Resource.Error(ErrorType.REQUEST_TIMEOUT)
+            }
+
+            200 -> {
+                with(response as Products) {
+                    Resource.Success(this)
+                }
+            }
+
+            else -> {
+                Resource.Error(ErrorType.SERVER_ERROR)
+            }
+        }
+    }
 }

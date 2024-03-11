@@ -27,4 +27,11 @@ interface DummyApiService {
     suspend fun getProductDetail(
         @Path("productId") productId: String,
     ): ProductDto
+
+    @GET("products/search")
+    suspend fun search(
+        @Query("q") query: String,
+        @Query("skip") skip: Int,
+        @Query("limit") limit: Int,
+    ): ProductsDto
 }
