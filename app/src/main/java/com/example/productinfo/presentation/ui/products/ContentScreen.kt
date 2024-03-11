@@ -99,7 +99,7 @@ fun ProductsScreenContent(
                 }
             }
 
-            if (products.isEmpty() && query.trim() != "") {
+            if (products.isEmpty() && query.trim() != "" && !isLoading) {
                 item (span = StaggeredGridItemSpan.FullLine) {
                     EmptyScreen()
                 }

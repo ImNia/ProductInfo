@@ -53,7 +53,7 @@ fun ProductDetail(
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .weight(1f)
+                .fillMaxHeight(0.3f)
                 .padding(vertical = 8.dp)
         ) {
             HorizontalPager(
@@ -89,7 +89,7 @@ fun ProductDetail(
                             .padding(2.dp)
                             .clip(CircleShape)
                             .background(color)
-                            .size(16.dp)
+                            .size(8.dp)
                     )
                 }
             }
@@ -149,6 +149,5 @@ fun ProductDetail(
                 textAlign = TextAlign.Justify,
             )
         }
-        Spacer(modifier = Modifier.weight(1f))
     }
 }

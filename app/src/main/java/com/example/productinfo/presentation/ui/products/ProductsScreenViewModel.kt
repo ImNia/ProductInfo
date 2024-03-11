@@ -177,7 +177,7 @@ class ProductsScreenViewModel @Inject constructor(
     }
 
     private fun getParams(): RequestParam {
-        return if (state.value.loadData == null || state.value.loadData?.skip == 0) {
+        return if (state.value.loadData == null) {
             RequestParam(
                 skip = 0,
                 limit = LIMIT_DATA
