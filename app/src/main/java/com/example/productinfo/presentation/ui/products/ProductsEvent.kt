@@ -6,4 +6,8 @@ sealed class ProductsEvent {
     data class OnCategorySelect(
         val category: String,
     ): ProductsEvent()
+
+    data class OnSearch(
+        val query: String,
+    ): ProductsEvent()
 }

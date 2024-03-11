@@ -89,16 +89,16 @@ fun ProductsScreen(
                 }
             )
         }
-        ProductsScreenContent(
-            modifier = Modifier
-                .padding(innerPadding),
-            navController = navController,
-            products = state.value.products,
-            categories = state.value.categories,
-            selectedCategory = state.value.selectedCategories,
-            onEvent = viewModel::onEvent,
-            isLoading = state.value.isLoading,
-            existError = state.value.existError
-        )
+            ProductsScreenContent(
+                modifier = Modifier
+                    .padding(innerPadding),
+                navController = navController,
+                products = state.value.products,
+                categories = state.value.categories,
+                selectedCategory = state.value.selectedCategories,
+                onEvent = viewModel::onEvent,
+                isLoading = state.value.isLoading,
+                existError = state.value.existError
+            )
     }
 }

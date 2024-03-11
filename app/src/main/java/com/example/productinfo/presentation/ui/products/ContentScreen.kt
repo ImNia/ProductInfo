@@ -16,17 +16,31 @@ import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridItemSpan
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -54,16 +68,6 @@ fun ProductsScreenContent(
             .fillMaxSize()
             .background(colorResource(id = R.color.white)),
     ) {
-        categories?.let {
-            CategoriesRow(
-                modifier = Modifier.padding(vertical = 16.dp),
-                categories = it,
-                selected = selectedCategory,
-                onClick = { category ->
-                    onEvent(ProductsEvent.OnCategorySelect(category))
-                },
-            )
-        }
         LazyVerticalStaggeredGrid(
             modifier = Modifier
                 .fillMaxSize(),
@@ -71,6 +75,28 @@ fun ProductsScreenContent(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalItemSpacing = 16.dp
         ) {
+            item (span = StaggeredGridItemSpan.FullLine) {
+                SearchBar(
+                    query = "",
+                    onEnterValue = { query ->
+                        onEvent(ProductsEvent.OnSearch(query.trim()))
+                    }
+                )
+            }
+
+            categories?.let {
+                item (span = StaggeredGridItemSpan.FullLine) {
+                    CategoriesRow(
+                        modifier = Modifier.padding(vertical = 16.dp),
+                        categories = it,
+                        selected = selectedCategory,
+                        onClick = { category ->
+                            onEvent(ProductsEvent.OnCategorySelect(category))
+                        },
+                    )
+                }
+            }
+
             items(products.size) { index ->
                 if (index >= products.size - 1 && !isLoading && !existError) {
                     onEvent(ProductsEvent.OnLoading)
@@ -194,4 +220,53 @@ fun CategoriesRow(
             }
         }
     }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun SearchBar(
+    query: String = "",
+    onEnterValue: (String) -> Unit,
+) {
+    var value by remember { mutableStateOf(query) }
+    val keyboardController = LocalSoftwareKeyboardController.current
+
+    OutlinedTextField(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp)
+            .clip(RoundedCornerShape(16.dp))
+            .background(CategoryColor)
+            .padding(horizontal = 16.dp),
+        placeholder = {
+            Text(text = "Search")
+        },
+        value = value,
+        onValueChange = {
+            value = it
+        },
+        textStyle = Typography.bodyMedium,
+        maxLines = 1,
+        keyboardOptions = KeyboardOptions(
+            keyboardType = KeyboardType.Text,
+            imeAction = ImeAction.Done
+        ),
+        keyboardActions = KeyboardActions(
+            onDone = {
+                keyboardController?.hide()
+                onEnterValue.invoke(value)
+            }
+        ),
+        leadingIcon = {
+            Icon(
+                painter = painterResource(id = R.drawable.ic_search),
+                contentDescription = null
+            )
+        },
+        colors = TextFieldDefaults.outlinedTextFieldColors(
+            focusedBorderColor = Color.Transparent,
+            unfocusedBorderColor = Color.Transparent,
+            cursorColor = Color.Black
+        )
+    )
 }

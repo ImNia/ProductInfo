@@ -1,5 +1,6 @@
 package com.example.productinfo.presentation.ui.products
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.productinfo.domain.models.ErrorType
@@ -67,6 +68,10 @@ class ProductsScreenViewModel @Inject constructor(
                     )
                 }
                 getProductsData(category)
+            }
+
+            is ProductsEvent.OnSearch -> {
+                Log.d("TEST", "search: ${event.query}")
             }
         }
     }
